@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const clothingItemSchema = new mongoose.Schema({
   name: {
@@ -21,13 +22,13 @@ const clothingItemSchema = new mongoose.Schema({
     },
   },
   owner: {
-    type: mongoose.SchemaType.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     link: "user",
   },
   likes: [
     {
-      type: mongoose.SchemaType.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       link: "user",
     },
   ],
