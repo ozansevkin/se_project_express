@@ -3,11 +3,12 @@ const ERROR_CODE = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .orFail()
     .then((items) => res.send({ data: items }))
-    .catch((err) => res.status(ERROR_CODE.ServerError).send({
+    .catch((err) =>
+      res.status(ERROR_CODE.ServerError).send({
         message: `An error has occurred on the server: ${err.message}`,
-      }));
+      })
+    );
 };
 
 const createItem = (req, res) => {
