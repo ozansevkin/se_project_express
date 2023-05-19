@@ -11,7 +11,7 @@ const getUsers = (req, res) => {
       }
 
       return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server.`,
+        message: `An error has occurred on the server: ${err.message}`,
       });
     });
 };
@@ -26,7 +26,7 @@ const getUser = (req, res) => {
       }
 
       return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server.`,
+        message: `An error has occurred on the server: ${err.message}`,
       });
     });
 };
@@ -42,7 +42,7 @@ const createUser = (req, res) => {
       }
 
       return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server.`,
+        message: `An error has occurred on the server: ${err.message}`,
       });
     });
 };

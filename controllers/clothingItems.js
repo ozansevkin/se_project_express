@@ -6,12 +6,8 @@ const getItems = (req, res) => {
     .orFail()
     .then((items) => res.send({ data: items }))
     .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(ERROR_CODE[err.name]).send({ message: err.message });
-      }
-
-      res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server.`,
+      return res.status(ERROR_CODE.ServerError).send({
+        message: `An error has occurred on the server: ${err.message}`,
       });
     });
 };
@@ -28,7 +24,7 @@ const createItem = (req, res) => {
       }
 
       return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server.`,
+        message: `An error has occurred on the server: ${err.message}`,
       });
     });
 };
@@ -43,7 +39,7 @@ const deleteItem = (req, res) => {
       }
 
       return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server.`,
+        message: `An error has occurred on the server: ${err.message}`,
       });
     });
 };
@@ -62,7 +58,7 @@ const likeItem = (req, res) => {
       }
 
       return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server.`,
+        message: `An error has occurred on the server: ${err.message}`,
       });
     });
 };
@@ -81,7 +77,7 @@ const unlikeItem = (req, res) => {
       }
 
       return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server.`,
+        message: `An error has occurred on the server: ${err.message}`,
       });
     });
 };
