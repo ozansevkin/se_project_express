@@ -15,7 +15,7 @@ mongoose.connection.on("connected", () => {
 });
 
 mongoose.connection.on("error", (err) => {
-  console.error("Error connecting to MongoDB: " + err);
+  console.error(`Error connecting to MongoDB: ${err}`);
 });
 
 app.use(express.json()); // for parsing application/json
