@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const helmet = require("helmet");
+const limiter = require("./utils/limiter");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -18,6 +20,8 @@ mongoose.connection.on("error", (err) => {
   console.error(`Error connecting to MongoDB: ${err}`);
 });
 
+app.use(limiter); // middleware againist DoS attacks
+app.use(helmet()); // middleware to set security headers
 app.use(express.json()); // for parsing application/json
 app.use((req, res, next) => {
   req.user = {
