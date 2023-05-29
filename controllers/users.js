@@ -32,13 +32,22 @@ const getUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar })
+  User.create({ name, avatar, email, password })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
+      console.error(err);
       if (err.name === "ValidationError") {
         return res.status(ERROR_CODE[err.name]).send({ message: err.message });
+      }
+
+      if (err.code === 11000) {
+        return res
+          .status(ERROR_CODE.ValidationError)
+          .send({
+            message: `Email address you entered is already in use. Try a different one. ${err.message}`,
+          });
       }
 
       return res.status(ERROR_CODE.ServerError).send({
