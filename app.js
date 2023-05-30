@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const helmet = require("helmet");
 const limiter = require("./utils/limiter");
 
@@ -20,6 +21,7 @@ mongoose.connection.on("error", (err) => {
   console.error(`Error connecting to MongoDB: ${err}`);
 });
 
+app.use(cors()); // enable All CORS Requests from the client to the server
 app.use(limiter); // middleware againist DoS attacks
 app.use(helmet()); // middleware to set security headers
 app.use(express.json()); // for parsing application/json

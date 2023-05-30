@@ -16,7 +16,7 @@ const auth = (req, res, next) => {
     res
       .status(ERROR_CODE.UnauthorizedError)
       .send({ message: `Unauthorized User: ${err.message}` });
-    return;
+    
   }
 };
 

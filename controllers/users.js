@@ -1,7 +1,7 @@
-const User = require("../models/user");
-const ERROR_CODE = require("../utils/errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const ERROR_CODE = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
 const getCurrentUser = (req, res) => {
@@ -45,7 +45,6 @@ const createUser = (req, res) => {
     User.create({ name, avatar, email, password: hash })
       .then((user) => res.send({ data: user }))
       .catch((err) => {
-        console.error(err);
         if (err.name === "ValidationError") {
           return res
             .status(ERROR_CODE[err.name])
