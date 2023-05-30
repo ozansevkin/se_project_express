@@ -31,9 +31,22 @@ const createItem = (req, res) => {
 const deleteItem = (req, res) => {
   ClothingItem.findByIdAndDelete(req.params.itemId)
     .orFail()
-    .then(() => res.send({}))
+    .then((item) => {
+      if (item.owner !== req.user._id) {
+        const error = new Error("User is not authorized to delete this item");
+        error.name = "ForbiddenError";
+
+        return Promise.reject(error);
+      }
+
+      return res.send({});
+    })
     .catch((err) => {
-      if (err.name === "DocumentNotFoundError" || err.name === "CastError") {
+      if (
+        err.name === "DocumentNotFoundError" ||
+        err.name === "CastError" ||
+        err.name === "ForbiddenError"
+      ) {
         return res.status(ERROR_CODE[err.name]).send({ message: err.message });
       }
 
