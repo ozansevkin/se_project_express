@@ -23,10 +23,4 @@ mongoose.connection.on("error", (err) => {
 app.use(limiter); // middleware againist DoS attacks
 app.use(helmet()); // middleware to set security headers
 app.use(express.json()); // for parsing application/json
-app.use((req, res, next) => {
-  req.user = {
-    _id: "64658af8014c642ff5cfde05",
-  };
-  next();
-}); // temporary authorization middleware
 app.use(require("./routes"));
