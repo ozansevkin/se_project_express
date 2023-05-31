@@ -4,6 +4,7 @@ const ERROR_CODE = {
   UnauthorizedError: 401,
   ForbiddenError: 403,
   DocumentNotFoundError: 404,
+  ConflictError: 409,
   ServerError: 500,
 };
 

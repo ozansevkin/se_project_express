@@ -43,7 +43,10 @@ const createUser = (req, res) => {
 
   bcrypt.hash(password, 10).then((hash) => {
     User.create({ name, avatar, email, password: hash })
-      .then((user) => res.status(201).send({ data: user }))
+      .then((user) => {
+        const { password, ...userRest } = user.toObject();
+        res.status(201).send({ data: userRest });
+      })
       .catch((err) => {
         if (err.name === "ValidationError") {
           return res
@@ -52,7 +55,7 @@ const createUser = (req, res) => {
         }
 
         if (err.code === 11000) {
-          return res.status(ERROR_CODE.ValidationError).send({
+          return res.status(ERROR_CODE.ConflictError).send({
             message: `Email address you entered is already in use. Try a different one. ${err.message}`,
           });
         }
@@ -66,6 +69,12 @@ const createUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(ERROR_CODE.UnauthorizedError)
+      .send({ message: "Provide both email and password" });
+  }
 
   User.findUserByCredentials(email, password)
     .then((user) => {
