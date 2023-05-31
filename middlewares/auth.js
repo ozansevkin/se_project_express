@@ -6,6 +6,10 @@ const auth = (req, res, next) => {
   try {
     const authorization = req.get("authorization");
 
+    if (!authorization) {
+      throw new Error("Authorization token is missing.");
+    }
+
     const token = authorization.replace("Bearer ", "");
 
     const payload = jwt.verify(token, JWT_SECRET);
