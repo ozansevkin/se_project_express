@@ -44,8 +44,9 @@ const createUser = (req, res) => {
   bcrypt.hash(password, 10).then((hash) => {
     User.create({ name, avatar, email, password: hash })
       .then((user) => {
-        const { password, ...userRest } = user.toObject();
-        res.status(201).send({ data: userRest });
+        const userData = user.toObject();
+        delete userData.password;
+        return res.status(201).send({ data: userData });
       })
       .catch((err) => {
         if (err.name === "ValidationError") {
@@ -76,13 +77,13 @@ const login = (req, res) => {
       .send({ message: "Provide both email and password" });
   }
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
 
-      res.send({ data: token });
+      return res.send({ data: { token } });
     })
     .catch((err) => {
       if (err.name === "UnauthorizedError") {
