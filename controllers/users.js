@@ -40,9 +40,10 @@ const login = (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .status(ERROR_CODE.UnauthorizedError)
-      .send({ message: "Provide both email and password" });
+    const error = new Error("Provide both email and password.");
+    error.name = "UnauthorizedError";
+
+    return errorHandler(error, res);
   }
 
   return User.findUserByCredentials(email, password)
