@@ -17,17 +17,19 @@ const createItem = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  ClothingItem.findByIdAndDelete(req.params.itemId)
+  ClothingItem.findById(req.params.itemId)
     .orFail()
     .then((item) => {
-      if (item.owner !== req.user._id) {
-        const error = new Error("User is not authorized to delete this item");
+      if (String(item.owner) !== req.user._id) {
+        const error = new Error("User is not permitted to delete this item.");
         error.name = "ForbiddenError";
 
         return Promise.reject(error);
       }
 
-      return res.send({});
+      return item
+        .deleteOne()
+        .then(() => res.send({ message: "Item deleted." }));
     })
     .catch((err) => errorHandler(err, res));
 };
