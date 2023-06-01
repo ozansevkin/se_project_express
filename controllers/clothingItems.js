@@ -1,14 +1,10 @@
 const ClothingItem = require("../models/clothingItem");
-const ERROR_CODE = require("../utils/errors");
+const errorHandler = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.send({ data: items }))
-    .catch((err) =>
-      res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server: ${err.message}`,
-      })
-    );
+    .catch((err) => errorHandler(err, res));
 };
 
 const createItem = (req, res) => {
@@ -17,15 +13,7 @@ const createItem = (req, res) => {
 
   ClothingItem.create({ name, weather, imageUrl, owner: ownerId })
     .then((item) => res.status(201).send({ data: item }))
-    .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res.status(ERROR_CODE[err.name]).send({ message: err.message });
-      }
-
-      return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server: ${err.message}`,
-      });
-    });
+    .catch((err) => errorHandler(err, res));
 };
 
 const deleteItem = (req, res) => {
@@ -41,19 +29,7 @@ const deleteItem = (req, res) => {
 
       return res.send({});
     })
-    .catch((err) => {
-      if (
-        err.name === "DocumentNotFoundError" ||
-        err.name === "CastError" ||
-        err.name === "ForbiddenError"
-      ) {
-        return res.status(ERROR_CODE[err.name]).send({ message: err.message });
-      }
-
-      return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server: ${err.message}`,
-      });
-    });
+    .catch((err) => errorHandler(err, res));
 };
 
 const likeItem = (req, res) => {
@@ -64,15 +40,7 @@ const likeItem = (req, res) => {
   )
     .orFail()
     .then((item) => res.send({ data: item }))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError" || err.name === "CastError") {
-        return res.status(ERROR_CODE[err.name]).send({ message: err.message });
-      }
-
-      return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server: ${err.message}`,
-      });
-    });
+    .catch((err) => errorHandler(err, res));
 };
 
 const unlikeItem = (req, res) => {
@@ -83,15 +51,7 @@ const unlikeItem = (req, res) => {
   )
     .orFail()
     .then((item) => res.send({ data: item }))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError" || err.name === "CastError") {
-        return res.status(ERROR_CODE[err.name]).send({ message: err.message });
-      }
-
-      return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server: ${err.message}`,
-      });
-    });
+    .catch((err) => errorHandler(err, res));
 };
 
 module.exports = { getItems, createItem, deleteItem, likeItem, unlikeItem };

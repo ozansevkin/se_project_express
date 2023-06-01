@@ -1,22 +1,14 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const ERROR_CODE = require("../utils/errors");
+const errorHandler = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError" || err.name === "CastError") {
-        return res.status(ERROR_CODE[err.name]).send({ message: err.message });
-      }
-
-      return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server: ${err.message}`,
-      });
-    });
+    .catch((err) => errorHandler(err, res));
 };
 
 const updateProfile = (req, res) => {
@@ -27,15 +19,7 @@ const updateProfile = (req, res) => {
   )
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError" || err.name === "CastError") {
-        return res.status(ERROR_CODE[err.name]).send({ message: err.message });
-      }
-
-      return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server: ${err.message}`,
-      });
-    });
+    .catch((err) => errorHandler(err, res));
 };
 
 const createUser = (req, res) => {
@@ -48,23 +32,7 @@ const createUser = (req, res) => {
         delete userData.password;
         return res.status(201).send({ data: userData });
       })
-      .catch((err) => {
-        if (err.name === "ValidationError") {
-          return res
-            .status(ERROR_CODE[err.name])
-            .send({ message: err.message });
-        }
-
-        if (err.code === 11000) {
-          return res.status(ERROR_CODE.ConflictError).send({
-            message: `Email address you entered is already in use. Try a different one. ${err.message}`,
-          });
-        }
-
-        return res.status(ERROR_CODE.ServerError).send({
-          message: `An error has occurred on the server: ${err.message}`,
-        });
-      });
+      .catch((err) => errorHandler(err, res));
   });
 };
 
@@ -85,15 +53,7 @@ const login = (req, res) => {
 
       return res.send({ data: { token } });
     })
-    .catch((err) => {
-      if (err.name === "UnauthorizedError") {
-        return res.status(ERROR_CODE[err.name]).send({ message: err.message });
-      }
-
-      return res.status(ERROR_CODE.ServerError).send({
-        message: `An error has occurred on the server: ${err.message}`,
-      });
-    });
+    .catch((err) => errorHandler(err, res));
 };
 
 module.exports = { getCurrentUser, updateProfile, createUser, login };
