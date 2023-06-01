@@ -31,18 +31,16 @@ const errorHandler = (err, res) => {
   // Log the error
   // console.error(err);
 
-  let statusCode = errors.ServerError.statusCode;
-  let errorMessage = errors.ServerError.message;
+  const { ServerError, ConflictError, ...restErrors } = errors;
+  let { statusCode, message } = ServerError;
 
   if (err.code === 11000) {
-    statusCode = errors.ConflictError.statusCode;
-    errorMessage = errors.ConflictError.message;
-  } else if (Object.keys(errors).includes(err.name)) {
-    statusCode = errors[err.name].statusCode;
-    errorMessage = errors[err.name].message;
+    ({ statusCode, message } = ConflictError);
+  } else if (restErrors[err.name]) {
+    ({ statusCode, message } = restErrors[err.name]);
   }
 
-  res.status(statusCode).send({ message: errorMessage });
+  res.status(statusCode).send({ message });
 };
 
 module.exports = errorHandler;
