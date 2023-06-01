@@ -1,4 +1,4 @@
-const errors = {
+const ERRORS = {
   ValidationError: {
     statusCode: 400,
     message: "Invalid data sent to server.",
@@ -31,7 +31,7 @@ const errorHandler = (err, res) => {
   // Log the error
   // console.error(err);
 
-  const { ServerError, ConflictError, ...restErrors } = errors;
+  const { ServerError, ConflictError, ...restErrors } = ERRORS;
   let { statusCode, message } = ServerError;
 
   if (err.code === 11000) {
