@@ -3,7 +3,7 @@ const errorHandler = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res.send({ data: items }))
+    .then((items) => res.send({ items }))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -12,7 +12,7 @@ const createItem = (req, res) => {
   const ownerId = req.user._id;
 
   ClothingItem.create({ name, weather, imageUrl, owner: ownerId })
-    .then((item) => res.status(201).send({ data: item }))
+    .then((item) => res.status(201).send({ item }))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -41,7 +41,7 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.send({ data: item }))
+    .then((item) => res.send({ item }))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -52,7 +52,7 @@ const unlikeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.send({ data: item }))
+    .then((item) => res.send({ item }))
     .catch((err) => errorHandler(err, res));
 };
 

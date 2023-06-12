@@ -7,7 +7,7 @@ const { JWT_SECRET } = require("../utils/config");
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .orFail()
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({ user }))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -18,7 +18,7 @@ const updateProfile = (req, res) => {
     { new: true, runValidators: true }
   )
     .orFail()
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({ user }))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -30,7 +30,7 @@ const createUser = (req, res) => {
       .then((user) => {
         const userData = user.toObject();
         delete userData.password;
-        return res.status(201).send({ data: userData });
+        return res.status(201).send({ user: userData });
       })
       .catch((err) => errorHandler(err, res));
   });
@@ -51,8 +51,7 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-
-      return res.send({ data: { token } });
+      return res.send({ token });
     })
     .catch((err) => errorHandler(err, res));
 };

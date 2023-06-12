@@ -29,7 +29,7 @@ const ERRORS = {
 
 const errorHandler = (err, res) => {
   // Log the error
-  // console.error(err);
+  console.error(err);
 
   const { ServerError, ConflictError, ...restErrors } = ERRORS;
   let { statusCode, message } = ServerError;
