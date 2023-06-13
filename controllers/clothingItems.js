@@ -3,6 +3,8 @@ const errorHandler = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
+    .populate("owner")
+    .populate("likes")
     .then((items) => res.send({ items }))
     .catch((err) => errorHandler(err, res));
 };
@@ -41,6 +43,8 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
+    .populate("owner")
+    .populate("likes")
     .then((item) => res.send({ item }))
     .catch((err) => errorHandler(err, res));
 };
@@ -52,6 +56,8 @@ const unlikeItem = (req, res) => {
     { new: true }
   )
     .orFail()
+    .populate("owner")
+    .populate("likes")
     .then((item) => res.send({ item }))
     .catch((err) => errorHandler(err, res));
 };
