@@ -14,6 +14,7 @@ const createItem = (req, res) => {
   const ownerId = req.user._id;
 
   ClothingItem.create({ name, weather, imageUrl, owner: ownerId })
+    .then((item) => item.populate("owner"))
     .then((item) => res.status(201).send({ item }))
     .catch((err) => errorHandler(err, res));
 };
