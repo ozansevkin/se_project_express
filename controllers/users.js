@@ -3,26 +3,37 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const errorHandler = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
+const {
+  BadRequestError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  ConflictError,
+} = require("../utils/errors");
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail()
+    .orFail(() =>
+      next(new NotFoundError("User with the provided ID is not found."))
+    )
     .then((user) => res.send({ user }))
-    .catch((err) => errorHandler(err, res));
+    .catch(next);
 };
 
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { ...req.body },
     { new: true, runValidators: true }
   )
-    .orFail()
+    .orFail(() =>
+      next(new NotFoundError("User with the provided ID is not found."))
+    )
     .then((user) => res.send({ user }))
-    .catch((err) => errorHandler(err, res));
+    .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   bcrypt.hash(password, 10).then((hash) => {
@@ -32,28 +43,33 @@ const createUser = (req, res) => {
         delete userData.password;
         return res.status(201).send({ user: userData });
       })
-      .catch((err) => errorHandler(err, res));
+      .catch((err) => {
+        if (err.code === 11000) {
+          return next(
+            new ConflictError("Entered an email address already exists.")
+          );
+        }
+
+        return next(new BadRequestError("Invalid user data sent to server."));
+      });
   });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    const error = new Error("Provide both email and password.");
-    error.name = "UnauthorizedError";
-
-    return errorHandler(error, res);
+    return next(new UnauthorizedError("Provide both email and password."));
   }
 
-  return User.findUserByCredentials(email, password)
+  User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
       return res.send({ token });
     })
-    .catch((err) => errorHandler(err, res));
+    .catch(next);
 };
 
 module.exports = { getCurrentUser, updateProfile, createUser, login };
