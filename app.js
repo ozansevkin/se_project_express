@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const limiter = require("./utils/limiter");
 const { errors } = require("celebrate");
 const errorHandler = require("./middlewares/errorHandler");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 // Destructure process.env variables
 const { PORT = 3001 } = process.env;
@@ -32,9 +33,13 @@ app.use(cors()); // enable All CORS Requests from the client to the server
 app.use(limiter); // middleware againist DoS attacks
 app.use(helmet()); // middleware to set security headers
 app.use(express.json()); // for parsing application/json
+app.use(requestLogger); // enable request logger
 
 // Mount the routes
 app.use(require("./routes"));
+
+// Enable error logger
+app.use(errorLogger);
 
 // Handle validation errors with celebrate error handler
 app.use(errors());
