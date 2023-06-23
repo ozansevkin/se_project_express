@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const helmet = require("helmet");
 const limiter = require("./utils/limiter");
+const { errors } = require("celebrate");
 const errorHandler = require("./middlewares/errorHandler");
 
 // Destructure process.env variables
@@ -35,7 +36,10 @@ app.use(express.json()); // for parsing application/json
 // Mount the routes
 app.use(require("./routes"));
 
-// Handle errors
+// Handle validation errors with celebrate error handler
+app.use(errors());
+
+// Handle rest of the errors with centralised errorHandler middleware
 app.use(errorHandler);
 
 // Start the server

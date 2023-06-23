@@ -1,9 +1,10 @@
 const router = require("express").Router();
 const { createUser, login } = require("../controllers/users");
 const { NotFoundError } = require("../utils/errors");
+const { validateUser, validateLogIn } = require("../middlewares/validation");
 
-router.post("/signup", createUser);
-router.post("/signin", login);
+router.post("/signup", validateUser, createUser);
+router.post("/signin", validateLogIn, login);
 
 router.use("/items", require("./clothingItems"));
 router.use("/users", require("./users"));
