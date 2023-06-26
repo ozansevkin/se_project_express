@@ -2,12 +2,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
-const {
-  BadRequestError,
-  UnauthorizedError,
-  NotFoundError,
-  ConflictError,
-} = require("../utils/errors");
+const BadRequestError = require("../errors/BadRequest");
+const UnauthorizedError = require("../errors/Unauthorized");
+const NotFoundError = require("../errors/NotFound");
+const ConflictError = require("../errors/Conflict");
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
@@ -60,7 +58,7 @@ const login = (req, res, next) => {
     return next(new UnauthorizedError("Provide both email and password."));
   }
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",

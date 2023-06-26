@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const { UnauthorizedError } = require("../utils/errors");
+const UnauthorizedError = require("../errors/Unauthorized");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -37,7 +37,10 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials(
+  email,
+  password
+) {
   return this.findOne({ email })
     .select("+password") // to get the password hash in the user object
     .then((user) => {
