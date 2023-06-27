@@ -15,9 +15,14 @@ const getCurrentUser = (req, res, next) => {
 };
 
 const updateProfile = (req, res, next) => {
+  const {
+    name = "Elise Bouer",
+    avatar = "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/wtwr-project/Elise.png",
+  } = req.body;
+
   User.findByIdAndUpdate(
     req.user._id,
-    { ...req.body },
+    { name, avatar },
     { new: true, runValidators: true }
   )
     .orFail(new NotFoundError("User with the provided ID is not found."))
@@ -33,23 +38,29 @@ const createUser = (req, res, next) => {
     password,
   } = req.body;
 
-  bcrypt.hash(password, 10).then((hash) => {
-    User.create({ name, avatar, email, password: hash })
-      .then((user) => {
-        const userData = user.toObject();
-        delete userData.password;
-        return res.status(201).send({ user: userData });
-      })
-      .catch((err) => {
-        if (err.code === 11000) {
-          return next(
-            new ConflictError("Entered an email address already exists.")
-          );
-        }
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return next(
+          new ConflictError("Entered an email address already exists.")
+        );
+      }
 
-        return next(new BadRequestError("Invalid user data sent to server."));
+      return bcrypt.hash(password, 10).then((hash) => {
+        User.create({ name, avatar, email, password: hash }).then((user) => {
+          if (!user) {
+            return next(
+              new BadRequestError("Invalid user data sent to server.")
+            );
+          }
+
+          const userData = user.toObject();
+          delete userData.password;
+          return res.status(201).send({ user: userData });
+        });
       });
-  });
+    })
+    .catch(next);
 };
 
 const login = (req, res, next) => {
