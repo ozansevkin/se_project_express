@@ -15,10 +15,7 @@ const getCurrentUser = (req, res, next) => {
 };
 
 const updateProfile = (req, res, next) => {
-  const {
-    name = "Elise Bouer",
-    avatar = "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/wtwr-project/Elise.png",
-  } = req.body;
+  const { name, avatar } = req.body;
 
   User.findByIdAndUpdate(
     req.user._id,
@@ -31,12 +28,7 @@ const updateProfile = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const {
-    name = "Elise Bouer",
-    avatar = "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/wtwr-project/Elise.png",
-    email,
-    password,
-  } = req.body;
+  const { name, avatar, email, password } = req.body;
 
   User.findOne({ email })
     .then((user) => {
