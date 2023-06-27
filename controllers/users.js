@@ -30,7 +30,12 @@ const updateProfile = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { name, avatar, email, password } = req.body;
+  const {
+    name = "Elise Bouer",
+    avatar = "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/wtwr-project/Elise.png",
+    email,
+    password,
+  } = req.body;
 
   bcrypt.hash(password, 10).then((hash) => {
     User.create({ name, avatar, email, password: hash })
