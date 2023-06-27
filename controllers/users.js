@@ -9,9 +9,7 @@ const ConflictError = require("../errors/Conflict");
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(() =>
-      next(new NotFoundError("User with the provided ID is not found."))
-    )
+    .orFail(new NotFoundError("User with the provided ID is not found."))
     .then((user) => res.send({ user }))
     .catch(next);
 };
@@ -22,9 +20,7 @@ const updateProfile = (req, res, next) => {
     { ...req.body },
     { new: true, runValidators: true }
   )
-    .orFail(() =>
-      next(new NotFoundError("User with the provided ID is not found."))
-    )
+    .orFail(new NotFoundError("User with the provided ID is not found."))
     .then((user) => res.send({ user }))
     .catch(next);
 };

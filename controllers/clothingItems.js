@@ -25,9 +25,7 @@ const createItem = (req, res, next) => {
 
 const deleteItem = (req, res, next) => {
   ClothingItem.findById(req.params.itemId)
-    .orFail(() =>
-      next(new NotFoundError("Item with the provided ID is not found."))
-    )
+    .orFail(new NotFoundError("Item with the provided ID is not found."))
     .then((item) => {
       if (String(item.owner) !== req.user._id) {
         return next(
@@ -48,9 +46,7 @@ const likeItem = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
-    .orFail(() =>
-      next(new NotFoundError("Item with the provided ID is not found."))
-    )
+    .orFail(new NotFoundError("Item with the provided ID is not found."))
     .populate("owner")
     .populate("likes")
     .then((item) => res.send({ item }))
@@ -63,9 +59,7 @@ const unlikeItem = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true }
   )
-    .orFail(() =>
-      next(new NotFoundError("Item with the provided ID is not found."))
-    )
+    .orFail(new NotFoundError("Item with the provided ID is not found."))
     .populate("owner")
     .populate("likes")
     .then((item) => res.send({ item }))
