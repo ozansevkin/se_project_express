@@ -44,9 +44,9 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
   return this.findOne({ email })
     .orFail(new UnauthorizedError("Incorrect email or password"))
     .select("+password") // to get the password hash in the user object
-    .then((user) => {
+    .then((user) => 
       // found - compare hashes
-      return bcrypt.compare(password, user.password).then((matched) => {
+       bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
           return Promise.reject(
             new UnauthorizedError("Incorrect email or password")
@@ -54,8 +54,8 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
         }
 
         return user;
-      });
-    });
+      })
+    );
 };
 
 module.exports = mongoose.model("User", userSchema);

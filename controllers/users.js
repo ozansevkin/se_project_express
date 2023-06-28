@@ -31,8 +31,8 @@ const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   User.findOne({ email })
-    .then((user) => {
-      if (user) {
+    .then((userExists) => {
+      if (userExists) {
         return next(
           new ConflictError("Entered an email address already exists.")
         );
