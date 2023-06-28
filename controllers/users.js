@@ -24,7 +24,13 @@ const updateProfile = (req, res, next) => {
   )
     .orFail(new NotFoundError("User with the provided ID is not found."))
     .then((user) => res.send({ user }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid item data sent to server."));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const createUser = (req, res, next) => {
@@ -40,19 +46,19 @@ const createUser = (req, res, next) => {
 
       return bcrypt.hash(password, 10).then((hash) => {
         User.create({ name, avatar, email, password: hash }).then((user) => {
-          if (!user) {
-            return next(
-              new BadRequestError("Invalid user data sent to server.")
-            );
-          }
-
           const userData = user.toObject();
           delete userData.password;
           return res.status(201).send({ user: userData });
         });
       });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid item data sent to server."));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const login = (req, res, next) => {

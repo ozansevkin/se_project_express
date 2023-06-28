@@ -53,6 +53,7 @@ app.use(errorLogger);
 app.use(errors());
 
 // Handle rest of the errors with centralised errorHandler middleware
+// Validation errors thrown by Mongoose handled here
 app.use(errorHandler);
 
 // Start the server

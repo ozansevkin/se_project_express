@@ -18,9 +18,13 @@ const createItem = (req, res, next) => {
   ClothingItem.create({ name, weather, imageUrl, owner: ownerId })
     .then((item) => item.populate("owner"))
     .then((item) => res.status(201).send({ item }))
-    .catch(() =>
-      next(new BadRequestError("Invalid item data sent to server."))
-    );
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid item data sent to server."));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const deleteItem = (req, res, next) => {
