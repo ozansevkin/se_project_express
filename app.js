@@ -31,10 +31,10 @@ mongoose.connection.on("error", (err) => {
 
 // Use middlewares
 app.use(cors()); // enable All CORS Requests from the client to the server
-app.use(limiter); // middleware againist DoS attacks
-app.use(helmet()); // middleware to set security headers
-app.use(express.json()); // for parsing application/json
 app.use(requestLogger); // enable request logger
+app.use(limiter); // middleware againist DoS attacks
+app.use(express.json()); // for parsing application/json
+app.use(helmet()); // middleware to set security headers
 
 // TEMPORARY - Crash Test
 app.get("/crash-test", () => {
