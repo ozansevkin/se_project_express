@@ -1,4 +1,4 @@
-name: Tests 13 sprint
+name: Tests
 
 on:
   push:
@@ -18,11 +18,11 @@ jobs:
         with:
           node-version: 18.x
       - name: Get testing lib
-        run: set -eu && git clone --depth 1 https://github.com/practicum-com/tests-13-public.git
+        run: set -eu && git clone --depth 1 https://github.com/ozansevkin/tests_se_project_express.git
       - name: Installing Dependencies
         run: npm i
       - name: Run test config
-        run: cd tests-13-public && bash ./bin/test-config.sh
+        run: cd tests_se_project_express && bash ./bin/test-config.sh
 
   test_endpoints:
     runs-on: ubuntu-latest
@@ -34,11 +34,11 @@ jobs:
         with:
           node-version: 18.x
       - name: Start MongoDB
-        uses: supercharge/mongodb-github-action@1.6.0
+        uses: supercharge/mongodb-github-action@1.9.0
         with:
           mongodb-version: "6.0"
       - name: Get testing lib
-        run: set -eu && git clone --depth 1 https://github.com/practicum-com/tests-13-public.git
+        run: set -eu && git clone --depth 1 https://github.com/ozansevkin/tests_se_project_express.git
       - name: Installing Dependencies
         run: npm i
       - name: Installing wait-port
@@ -46,4 +46,4 @@ jobs:
       - name: Run server
         run: npm run start & wait-port -t 30000 localhost:3001
       - name: Run test endpoints
-        run: cd tests-13-public && bash ./bin/test-endpoints.sh
+        run: cd tests_se_project_express && bash ./bin/test-endpoints.sh
