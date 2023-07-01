@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const BadRequestError = require("../errors/BadRequest");
-const UnauthorizedError = require("../errors/Unauthorized");
 const NotFoundError = require("../errors/NotFound");
 const ConflictError = require("../errors/Conflict");
 
@@ -64,11 +63,7 @@ const createUser = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return next(new UnauthorizedError("Provide both email and password."));
-  }
-
-  return User.findUserByCredentials(email, password)
+  User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
