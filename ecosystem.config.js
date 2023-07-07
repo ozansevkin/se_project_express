@@ -8,7 +8,7 @@ module.exports = {
       key: "~/.ssh/id_ed25519.pub",
       ref: "origin/main",
       repo: "git@github.com:ozansevkin/se_project_express.git",
-      path: "/sevkinozan/se_project_express",
+      path: "/se_project_express",
       "post-deploy": "npm install && pm2 startOrRestart ecosystem.config.js",
     },
   },
