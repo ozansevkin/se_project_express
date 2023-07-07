@@ -1,5 +1,5 @@
 module.exports = {
-  apps: [{ name: "app", script: "./app.js" }],
+  apps: [{ name: "app", script: "npm start" }],
   // Deployment Configuration
   deploy: {
     production: {
