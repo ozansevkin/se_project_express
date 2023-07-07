@@ -1,5 +1,11 @@
 module.exports = {
-  apps: [{ name: "app", script: "npm start" }],
+  apps: [
+    {
+      name: "app",
+      script: "npm start",
+      cwd: "/home/sevkinozan/se_project_express/current",
+    },
+  ],
   // Deployment Configuration
   deploy: {
     production: {
