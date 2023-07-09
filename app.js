@@ -36,13 +36,6 @@ app.use(limiter); // middleware againist DoS attacks
 app.use(express.json()); // for parsing application/json
 app.use(helmet()); // middleware to set security headers
 
-// TEMPORARY - Crash Test
-app.get("/crash-test", () => {
-  setTimeout(() => {
-    throw new Error("Server will crash now");
-  }, 0);
-});
-
 // Mount the routes
 app.use(require("./routes"));
 
