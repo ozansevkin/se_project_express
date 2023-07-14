@@ -10,9 +10,9 @@ The back-end project is focused on creating a server for the WTWR application. I
 
 ## Links
 
-- [API Domain](https://api.wtwr.australia.ai/items)
+- [API Domain](https://api.wtwr.ozansevkin.dev/items)
 
-- [Production](https://wtwr.australia.ai)
+- [Production](https://wtwr.ozansevkin.dev)
 
 - [Frontend Repo](https://github.com/ozansevkin/se_project_react)
 
