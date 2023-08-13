@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/ozansevkin/se_project_express/issues"
   },
-  "homepage": "https://api.wtwr.australia.ai/",
+  "homepage": "https://api.wtwr.ozansevkin.dev/",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "celebrate": "^15.0.1",
